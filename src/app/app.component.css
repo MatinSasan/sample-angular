@@ -1,0 +1,9 @@
+body {
+  box-sizing: border-box;
+  margin: auto;
+  padding: 20px;
+}
+
+input {
+  margin: 20px;
+}

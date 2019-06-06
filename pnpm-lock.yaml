@@ -1,0 +1,12 @@
+dependencies:
+  bootstrap: 3.4.1
+lockfileVersion: 5
+packages:
+  /bootstrap/3.4.1:
+    dev: false
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==
+specifiers:
+  bootstrap: '3'
