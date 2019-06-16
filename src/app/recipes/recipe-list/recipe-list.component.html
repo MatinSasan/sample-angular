@@ -3,7 +3,7 @@
     <button
       class="btn btn-success"
       (click)="onNewRecipe()"
-      [disabled]="!authService.isAuth()"
+      [disabled]="!isAuth()"
     >
       New Recipe
     </button>
