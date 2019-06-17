@@ -1,38 +1,52 @@
 import { AuthService } from './../auth/auth.service';
 import { Injectable } from '@angular/core';
-import { Http, Headers, Response } from '@angular/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { RecipeService } from '../recipes/recipe.service';
 import { databaseURL } from 'src/environments/keys';
 import { Recipe } from '../recipes/recipe.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataStorageService {
   constructor(
-    private http: Http,
+    private httpClient: HttpClient,
     private recipeService: RecipeService,
     private authService: AuthService
   ) {}
 
   storeRecipes() {
-    const headers = new Headers({ 'Access-Control-Allow-Origin': '*' });
     const token = this.authService.getIdToken();
+    // const headers = new HttpHeaders().set('Authorization', 'Bearer')
 
-    return this.http.put(
-      `${databaseURL}/recipes.json?auth=${token}`,
+    return this.httpClient.put(
+      `${databaseURL}/recipes.json`,
       this.recipeService.getRecipes(),
-      { headers }
+      { observe: 'body', params: new HttpParams().set('auth', token) }
     );
   }
 
   getRecipes() {
     const token = this.authService.getIdToken();
 
-    this.http
-      .get(`${databaseURL}/recipes.json?auth=${token}`)
-      .subscribe((res: Response) => {
-        const recipes: Recipe[] = res.json();
+    this.httpClient
+      .get<Recipe[]>(`${databaseURL}/recipes.json`, {
+        observe: 'body',
+        responseType: 'json',
+        params: new HttpParams().set('auth', token)
+      })
+      .pipe(
+        map(recipes => {
+          for (const recipe of recipes) {
+            if (!recipe.ingredients) {
+              recipe.ingredients = [];
+            }
+          }
+          return recipes;
+        })
+      )
+      .subscribe((recipes: Recipe[]) => {
         this.recipeService.setRecipes(recipes);
       });
   }
