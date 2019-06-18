@@ -17,24 +17,18 @@ export class DataStorageService {
   ) {}
 
   storeRecipes() {
-    const token = this.authService.getIdToken();
-    // const headers = new HttpHeaders().set('Authorization', 'Bearer')
-
     return this.httpClient.put(
       `${databaseURL}/recipes.json`,
       this.recipeService.getRecipes(),
-      { observe: 'body', params: new HttpParams().set('auth', token) }
+      { observe: 'body' }
     );
   }
 
   getRecipes() {
-    const token = this.authService.getIdToken();
-
     this.httpClient
       .get<Recipe[]>(`${databaseURL}/recipes.json`, {
         observe: 'body',
-        responseType: 'json',
-        params: new HttpParams().set('auth', token)
+        responseType: 'json'
       })
       .pipe(
         map(recipes => {
