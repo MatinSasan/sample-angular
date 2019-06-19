@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import 'rxjs/add/operator/map';
+import { map, take } from 'rxjs/operators';
 import {
   CanActivate,
   RouterStateSnapshot,
@@ -17,8 +18,11 @@ export class AuthGuardService implements CanActivate {
   constructor(private store: Store<fromApp.AppState>) {}
 
   canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    return this.store.select('auth').map((authState: fromAuth.State) => {
-      return authState.isAuth;
-    });
+    return this.store.select('auth').pipe(
+      take(1),
+      map((authState: fromAuth.State) => {
+        return authState.isAuth;
+      })
+    );
   }
 }
